@@ -1,3 +1,3 @@
 <template>
-  <RouterView />
+  <RouterView class="bg-dark text-gray-300" />
 </template>
