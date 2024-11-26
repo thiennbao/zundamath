@@ -7,21 +7,21 @@ import { Icon } from "@iconify/vue";
     <div class="xl:max-w-screen-lg lg:max-w-screen-md w-full m-auto flex">
       <div class="flex-grow flex flex-col justify-center items-center lg:items-start gap-y-4">
         <h1 class="text-6xl md:text-8xl bg-gradient-primary text-transparent bg-clip-text">ZundaMath</h1>
-        <p class="md:text-xl">Anime sensei who teach you maths</p>
+        <p class="md:text-xl">Sensei who helps you with maths</p>
         <div class="flex mt-8 gap-4">
-          <a
-            href="/auth"
+          <RouterLink
+            to="/auth"
             class="px-4 py-2 cursor-pointer rounded border-2 border-primary hover:bg-primary hover:text-black transition"
           >
             <span>Sign in to save chats</span>
-          </a>
-          <a
-            href="/chat"
+          </RouterLink>
+          <RouterLink
+            to="/chat"
             class="px-4 py-2 cursor-pointer rounded border-2 border-primary hover:bg-primary hover:text-black transition flex items-center gap-1"
           >
             <span>Get started</span>
             <Icon icon="fluent:arrow-right-12-filled" />
-          </a>
+          </RouterLink>
         </div>
       </div>
       <div class="hidden w-1/3 lg:flex justify-end items-center relative">
