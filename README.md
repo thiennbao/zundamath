@@ -22,7 +22,7 @@ npm install
 npm run dev
 ```
 
-### Server side - Node + Express + Mongo
+### Server side: Node + Express + Mongo
 
 🫛 Go into server's directory
 
