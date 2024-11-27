@@ -39,10 +39,10 @@ import { RouterLink } from "vue-router";
         <Icon icon="fluent:arrow-right-12-filled" class="text-xl" />
       </button>
     </form>
-    <div class="mt-8 text-center flex flex-wrap items-center">
+    <div class="mt-8 px-4 flex flex-wrap justify-center items-center">
       <RouterLink to="/" class="text-primary">Back to home</RouterLink>
       <Icon icon="bi:dot" />
-      <p>
+      <p class="text-center">
         <span>Already have an account?</span>
         <RouterLink to="/login" class="text-primary"> Log in </RouterLink>
         <span>to your account</span>

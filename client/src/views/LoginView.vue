@@ -32,10 +32,10 @@ import { RouterLink } from "vue-router";
         <Icon icon="fluent:arrow-right-12-filled" class="text-xl" />
       </button>
     </form>
-    <div class="mt-8 text-center flex flex-wrap items-center">
+    <div class="mt-8 px-4 text-center flex flex-wrap justify-center items-center">
       <RouterLink to="/" class="text-primary">Back to home</RouterLink>
       <Icon icon="bi:dot" />
-      <p>
+      <p class="text-center">
         <span>New to ZundaMath?</span>
         <RouterLink to="/signup" class="text-primary"> Sign up </RouterLink>
         <span>a new account</span>
