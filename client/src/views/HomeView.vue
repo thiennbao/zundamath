@@ -10,16 +10,16 @@ import { Icon } from "@iconify/vue";
         <p class="md:text-xl">Sensei who helps you with maths</p>
         <div class="flex mt-8 gap-4">
           <RouterLink
-            to="/auth"
-            class="px-4 py-2 cursor-pointer rounded border-2 border-primary hover:bg-primary hover:text-black transition"
+            to="/login"
+            class="px-4 py-2 cursor-pointer rounded border-2 border-primary hover:bg-primary hover:text-dark transition"
           >
-            <span>Sign in to save chats</span>
+            <span>Login to save your chats</span>
           </RouterLink>
           <RouterLink
             to="/chat"
-            class="px-4 py-2 cursor-pointer rounded border-2 border-primary hover:bg-primary hover:text-black transition flex items-center gap-1"
+            class="px-4 py-2 cursor-pointer rounded border-2 border-primary hover:bg-primary hover:text-dark transition flex items-center gap-1"
           >
-            <span>Get started</span>
+            <span>Start chatting</span>
             <Icon icon="fluent:arrow-right-12-filled" />
           </RouterLink>
         </div>

@@ -15,7 +15,7 @@ const adjustHeight = () => {
 <template>
   <div class="w-1/2 m-auto flex flex-col justify-center gap-8">
     <p class="text-4xl text-center bg-gradient-primary text-transparent bg-clip-text">Ask me a maths question</p>
-    <form class="p-2 bg-[#2a2a2a] rounded-2xl overflow-hidden">
+    <form class="p-2 bg-form rounded-2xl overflow-hidden">
       <textarea
         ref="textarea"
         @input="adjustHeight"

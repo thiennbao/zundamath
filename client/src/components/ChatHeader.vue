@@ -13,9 +13,8 @@ import { Icon } from "@iconify/vue";
           <Icon icon="solar:pen-new-square-broken" class="text-xl" />
         </div>
       </div>
-      <RouterLink to="/" class="flex gap-2">
+      <RouterLink to="/">
         <img src="/logo.svg" class="h-8" />
-        <p class="text-2xl text-primary">ZundaMath</p>
       </RouterLink>
     </div>
     <div class="flex gap-2">
