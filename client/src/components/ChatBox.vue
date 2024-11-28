@@ -23,10 +23,9 @@ const handleSubmit = async () => {
   if (!message.value) return;
   const chatId = "67474e82150691aaebc70644"; // Just for test, change later
   try {
-    console.log(message.value);
-    const res = await axios.post(`${import.meta.env.VITE_SERVER_URL}/api/chat`, { content: message.value, chatId });
+    const res = await axios.post(`${import.meta.env.VITE_SERVER_URL}/api/chat`, { message: message.value, chatId });
     chat.value.push(message.value);
-    chat.value.push(res.data.data);
+    chat.value.push(res.data.message);
     // Clear input
     if (textarea.value) {
       message.value = "";

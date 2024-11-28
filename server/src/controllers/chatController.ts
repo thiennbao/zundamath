@@ -1,17 +1,18 @@
 import { Request, Response } from "express";
 import prisma from "../utils/prisma";
 import { MessageType } from "@prisma/client";
+import axios from "axios";
 
 const chatController = {
   chat: async (req: Request, res: Response) => {
-    if (!req.body.content || !req.body.chatId) {
+    if (!req.body.message || !req.body.chatId) {
       res.status(400).json({ message: "Bad request" });
       return;
     }
-    const { content, chatId } = req.body;
+    const { message, chatId } = req.body;
     try {
-      const resContent = "Lorem ipsum odor amet"; // Call chatbox service...
-      res.status(200).json({ data: resContent });
+      const resMsg = await axios.post("http://localhost:5000", { message });
+      res.status(200).json({ message: resMsg.data.message });
     } catch (error) {
       console.log(error);
       res.status(500).json({ message: "Server internal error" });

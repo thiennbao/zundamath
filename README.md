@@ -10,7 +10,7 @@
 cd client
 ```
 
-🫛 Install the dependencies
+🫛 Install dependencies
 
 ```sh
 npm install
@@ -30,7 +30,7 @@ npm run dev
 cd server
 ```
 
-🫛 Install the dependencies
+🫛 Install dependencies
 
 ```sh
 npm install
@@ -42,6 +42,22 @@ npm install
 npm run dev
 ```
 
-### Chatbot service
+### Chatbot service: Flask
 
-🫛 Add soon
+🫛 Go into service's directory
+
+```sh
+cd service
+```
+
+🫛 Install requirements
+
+```sh
+pip install -r requirements.txt
+```
+
+🫛 Run the server
+
+```sh
+flask run --debug
+```
