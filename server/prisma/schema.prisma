@@ -16,16 +16,22 @@ model Account {
 
 model Chat {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  datetime  DateTime
+  datetime  DateTime  @default(now())
   messages  Message[]
   Account   Account   @relation(fields: [accountId], references: [id])
   accountId String    @db.ObjectId
 }
 
+enum MessageType {
+  REQUEST
+  RESPONSE
+}
+
 model Message {
-  id       String   @id @default(auto()) @map("_id") @db.ObjectId
-  type     String
-  datetime DateTime
-  Chat     Chat     @relation(fields: [chatId], references: [id])
-  chatId   String   @db.ObjectId
+  id       String      @id @default(auto()) @map("_id") @db.ObjectId
+  content  String
+  type     MessageType
+  datetime DateTime    @default(now())
+  Chat     Chat        @relation(fields: [chatId], references: [id])
+  chatId   String      @db.ObjectId
 }

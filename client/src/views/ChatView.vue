@@ -6,12 +6,12 @@ import ChatSidebar from "../components/ChatSidebar.vue";
 
 <template>
   <main class="flex">
-    <ChatSidebar />
+    <ChatSidebar class="flex-shrink-0" />
     <div
-      class="flex-grow h-screen flex flex-col overflow-y-scroll [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:bg-primary"
+      class="flex-grow flex flex-col h-screen overflow-y-scroll [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:bg-primary"
     >
-      <ChatHeader />
-      <ChatBox class="flex-grow mb-16" />
+      <ChatHeader class="sticky top-0 bg-dark z-10" />
+      <ChatBox class="flex-grow w-3/5 m-auto" />
     </div>
   </main>
 </template>
