@@ -1,6 +1,4 @@
 import { Request, Response } from "express";
-import prisma from "../utils/prisma";
-import { MessageType } from "@prisma/client";
 import axios from "axios";
 
 const chatController = {
@@ -11,7 +9,7 @@ const chatController = {
     }
     const { message, chatId } = req.body;
     try {
-      const resMsg = await axios.post("http://localhost:5000", { message });
+      const resMsg = await axios.post(process.env.CHAT_URL as string, { message });
       res.status(200).json({ message: resMsg.data.message });
     } catch (error) {
       console.log(error);
