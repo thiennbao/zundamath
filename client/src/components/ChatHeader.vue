@@ -1,5 +1,14 @@
 <script setup lang="ts">
 import { Icon } from "@iconify/vue";
+import Popup from "./Popup.vue";
+import Settings from "./Settings.vue";
+import { ref } from "vue";
+
+const isSettingsOpen = ref(false);
+
+const toggleSetting = (isOpen: boolean) => {
+  isSettingsOpen.value = isOpen;
+};
 </script>
 
 <template>
@@ -18,12 +27,18 @@ import { Icon } from "@iconify/vue";
       </RouterLink>
     </div>
     <div class="flex gap-2">
-      <div class="p-2 cursor-pointer rounded-md hover:bg-primary hover:bg-opacity-5 hover:text-primary">
+      <button class="p-2 rounded-md hover:bg-primary hover:bg-opacity-5 hover:text-primary">
         <Icon icon="material-symbols:share-outline" class="text-2xl" />
-      </div>
-      <div class="p-2 cursor-pointer rounded-md hover:bg-primary hover:bg-opacity-5 hover:text-primary">
+      </button>
+      <button
+        @click="isSettingsOpen = !isSettingsOpen"
+        class="p-2 rounded-md hover:bg-primary hover:bg-opacity-5 hover:text-primary"
+      >
         <Icon icon="hugeicons:setting-07" class="text-2xl" />
-      </div>
+      </button>
     </div>
+    <Popup title="Settings" :toggle="toggleSetting" v-if="isSettingsOpen">
+      <Settings></Settings>
+    </Popup>
   </div>
 </template>
