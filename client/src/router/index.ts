@@ -20,7 +20,6 @@ const router = createRouter({
 router.beforeEach(async (to, _from, next) => {
   if (to.path === "/login" || to.path === "/signup") {
     const hasLogged = await tokenUtil.verify();
-    console.log(hasLogged)
     if (hasLogged) {
       next("/chat");
       return;
