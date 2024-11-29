@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
-import jwt, { JsonWebTokenError, verify } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import prisma from "../utils/prisma";
 
 const authController = {
@@ -56,11 +56,11 @@ const authController = {
     }
     const { token } = req.body;
     try {
-      jwt.verify(token, process.env.JWT_KEY as string);
-      res.status(200).json({ message: "Token verified", verified: true });
+      const decoded = jwt.verify(token, process.env.JWT_KEY as string) as { username: string };
+      res.status(200).json({ message: "Token verified", decoded });
     } catch (error) {
-      if (error instanceof JsonWebTokenError) {
-        res.status(200).json({ message: "Invalid token", verified: false });
+      if (error instanceof jwt.JsonWebTokenError) {
+        res.status(200).json({ message: "Invalid token", decoded: null });
       } else {
         res.status(500).json({ message: "Server internal error" });
       }

@@ -1,5 +1,12 @@
 <script setup lang="ts">
 import { Icon } from "@iconify/vue";
+import tokenUtil from "../utils/token";
+import { onMounted, ref } from "vue";
+
+const hasLogged = ref(true);
+onMounted(async () => {
+  hasLogged.value = await tokenUtil.verify();
+});
 </script>
 
 <template>
@@ -10,6 +17,7 @@ import { Icon } from "@iconify/vue";
         <p class="md:text-xl">Sensei who helps you with maths</p>
         <div class="flex mt-8 gap-4">
           <RouterLink
+            v-if="!hasLogged"
             to="/login"
             class="px-4 py-2 cursor-pointer rounded border-2 border-primary hover:bg-primary hover:text-dark transition"
           >
