@@ -26,7 +26,28 @@ const authController = {
     }
   },
   login: async (req: Request, res: Response) => {
-    res.send("Log in");
+    if (!req.body.username || !req.body.password) {
+      res.status(400).json({ message: "Bad request" });
+      return;
+    }
+    const { username, password } = req.body;
+    try {
+      const foundAccount = await prisma.account.findUnique({ where: { username } });
+      if (!foundAccount) {
+        res.status(404).json({ message: "Username not found" });
+        return;
+      }
+      const isMatched = await bcrypt.compare(password, foundAccount.password);
+      if (!isMatched) {
+        res.status(401).json({ message: "Wrong password" });
+        return;
+      }
+      const token = jwt.sign(foundAccount, process.env.JWT_KEY as string);
+      res.status(200).json({ token });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "Server internal error" });
+    }
   },
 };
 

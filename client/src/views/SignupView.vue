@@ -4,8 +4,6 @@ import axios from "axios";
 import { reactive, ref } from "vue";
 import { RouterLink } from "vue-router";
 
-console.log(document.cookie)
-
 const data = reactive({
   username: "",
   password: "",
@@ -63,6 +61,7 @@ const handleSubmit = async () => {
       <div>
         <input
           v-model="data.password"
+          type="password"
           placeholder="Password"
           @focus="errMsg.password = ''"
           :class="errMsg.password && 'border-red-400'"
@@ -73,6 +72,7 @@ const handleSubmit = async () => {
       <div>
         <input
           v-model="data.confirm"
+          type="password"
           placeholder="Confirm password"
           @focus="errMsg.confirm = ''"
           :class="errMsg.confirm && 'border-red-400'"
