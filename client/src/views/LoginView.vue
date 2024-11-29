@@ -3,6 +3,11 @@ import { Icon } from "@iconify/vue";
 import axios from "axios";
 import { reactive, ref } from "vue";
 import { RouterLink } from "vue-router";
+import Cookies from "universal-cookie";
+import { useRouter } from "vue-router";
+
+const cookies = new Cookies();
+const router = useRouter();
 
 const data = reactive({
   username: "",
@@ -24,7 +29,8 @@ const handleSubmit = async () => {
   try {
     loading.value = true;
     const res = await axios.post(`${import.meta.env.VITE_SERVER_URL}/api/auth/login`, data);
-    console.log(res.data);
+    cookies.set("token", res.data.token);
+    router.push("/chat");
   } catch (error: any) {
     console.error(error.response.data.message);
     if (error.status === 404) {

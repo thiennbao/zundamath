@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import jwt, { JsonWebTokenError, verify } from "jsonwebtoken";
 import prisma from "../utils/prisma";
 
 const authController = {
@@ -47,6 +47,23 @@ const authController = {
     } catch (error) {
       console.log(error);
       res.status(500).json({ message: "Server internal error" });
+    }
+  },
+  verify: async (req: Request, res: Response) => {
+    if (!req.body.token) {
+      res.status(400).json({ message: "Bad request" });
+      return;
+    }
+    const { token } = req.body;
+    try {
+      jwt.verify(token, process.env.JWT_KEY as string);
+      res.status(200).json({ message: "Token verified", verified: true });
+    } catch (error) {
+      if (error instanceof JsonWebTokenError) {
+        res.status(200).json({ message: "Invalid token", verified: false });
+      } else {
+        res.status(500).json({ message: "Server internal error" });
+      }
     }
   },
 };
