@@ -17,8 +17,8 @@ const authController = {
         return;
       }
       const hashed = await bcrypt.hash(password, 10);
-      await prisma.account.create({ data: { username, password: hashed } });
-      const token = jwt.sign(username, process.env.JWT_KEY as string);
+      const newAccount = await prisma.account.create({ data: { username, password: hashed } });
+      const token = jwt.sign(newAccount.id, process.env.JWT_KEY as string);
       res.status(200).json({ token });
     } catch (error) {
       console.log(error);
@@ -42,7 +42,7 @@ const authController = {
         res.status(401).json({ message: "Wrong password" });
         return;
       }
-      const token = jwt.sign(foundAccount, process.env.JWT_KEY as string);
+      const token = jwt.sign(foundAccount.id, process.env.JWT_KEY as string);
       res.status(200).json({ token });
     } catch (error) {
       console.log(error);
@@ -56,8 +56,8 @@ const authController = {
     }
     const { token } = req.body;
     try {
-      const decoded = jwt.verify(token, process.env.JWT_KEY as string) as { username: string };
-      res.status(200).json({ message: "Token verified", decoded: decoded.username });
+      const decoded = jwt.verify(token, process.env.JWT_KEY as string);
+      res.status(200).json({ message: "Token verified", decoded });
     } catch (error) {
       if (error instanceof jwt.JsonWebTokenError) {
         res.status(200).json({ message: "Invalid token", decoded: null });
@@ -67,13 +67,13 @@ const authController = {
     }
   },
   change: async (req: Request, res: Response) => {
-    if (!req.body.username || !req.body.current || !req.body.password) {
+    if (!req.body.id || !req.body.current || !req.body.password) {
       res.status(400).json({ message: "Bad request" });
       return;
     }
-    const { username, current, password } = req.body;
+    const { id, current, password } = req.body;
     try {
-      const foundAccount = await prisma.account.findUnique({ where: { username } });
+      const foundAccount = await prisma.account.findUnique({ where: { id } });
       if (!foundAccount) {
         res.status(404).json({ message: "Username not found" });
         return;
@@ -84,7 +84,7 @@ const authController = {
         return;
       }
       const hashed = await bcrypt.hash(password, 10);
-      await prisma.account.update({ where: { username }, data: { password: hashed } });
+      await prisma.account.update({ where: { id }, data: { password: hashed } });
       res.status(200).json({ message: "Changed password successfully" });
     } catch (error) {
       console.log(error);

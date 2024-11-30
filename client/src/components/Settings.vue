@@ -14,14 +14,9 @@ const logout = () => {
   router.push("/");
 };
 
-const data = reactive({
-  username: "",
-  current: "",
-  password: "",
-  confirm: "",
-});
+const data = reactive({ id: "", current: "", password: "", confirm: "" });
 onMounted(async () => {
-  data.username = await tokenUtil.verify();
+  data.id = await tokenUtil.verify();
 });
 const errMsg = reactive({
   current: "",

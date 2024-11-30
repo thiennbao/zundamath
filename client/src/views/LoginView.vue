@@ -8,14 +8,8 @@ import tokenUtil from "../utils/token";
 
 const router = useRouter();
 
-const data = reactive({
-  username: "",
-  password: "",
-});
-const errMsg = reactive({
-  username: "",
-  password: "",
-});
+const data = reactive({ username: "", password: "" });
+const errMsg = reactive({ username: "", password: "" });
 const loading = ref(false);
 
 const handleSubmit = async () => {
@@ -56,8 +50,8 @@ const handleSubmit = async () => {
           v-model="data.username"
           placeholder="Username"
           @focus="errMsg.username = ''"
-          :class="errMsg.username && 'border-red-400'"
-          class="w-full p-4 bg-form rounded-md outline-none border-2 border-transparent focus:border-primary transition"
+          :class="errMsg.username ? 'border-red-400' : 'border-transparent'"
+          class="w-full p-4 bg-form rounded-md outline-none border-2 focus:border-primary transition"
         />
         <span class="text-sm text-red-400 px-2">{{ errMsg.username }}</span>
       </div>
@@ -67,8 +61,8 @@ const handleSubmit = async () => {
           type="password"
           placeholder="Password"
           @focus="errMsg.password = ''"
-          :class="errMsg.password && 'border-red-400'"
-          class="w-full p-4 bg-form rounded-md outline-none border-2 border-transparent focus:border-primary transition"
+          :class="errMsg.password ? 'border-red-400' : 'border-transparent'"
+          class="w-full p-4 bg-form rounded-md outline-none border-2 focus:border-primary transition"
         />
         <span class="text-sm text-red-400 px-2">{{ errMsg.password }}</span>
       </div>
