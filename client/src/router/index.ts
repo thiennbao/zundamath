@@ -8,6 +8,7 @@ import tokenUtil from "../utils/token";
 const routes = [
   { path: "/", component: HomeView },
   { path: "/chat", component: ChatView },
+  { path: "/chat/:id", component: ChatView },
   { path: "/login", component: LoginView },
   { path: "/signup", component: SignupView },
 ];
