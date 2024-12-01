@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Icon } from "@iconify/vue";
-import { onMounted, reactive, ref } from "vue";
+import { reactive, ref } from "vue";
 import tokenUtil from "../utils/token";
 import axios from "axios";
 import { useRouter } from "vue-router";
@@ -14,10 +14,7 @@ const logout = () => {
   router.push("/");
 };
 
-const data = reactive({ id: "", current: "", password: "", confirm: "" });
-onMounted(async () => {
-  data.id = await tokenUtil.verify();
-});
+const data = reactive({ token: tokenUtil.get(), current: "", password: "", confirm: "" });
 const errMsg = reactive({
   current: "",
   password: "",
@@ -27,6 +24,7 @@ const isSuccess = ref(false);
 const loading = ref(false);
 
 const changePassword = async () => {
+  if (loading.value) return;
   for (let key in data) {
     if (!data[key as keyof typeof data]) {
       errMsg[key as keyof typeof errMsg] = "Please fill out this field";
@@ -134,7 +132,7 @@ const changePassword = async () => {
           <button
             v-else
             @click="changePassword"
-            class="w-fit ml-auto px-4 py-2 rounded-xl border border-form hover:bg-form transition flex items-center gap-2"
+            class="w-fit ml-auto px-4 py-2 rounded-xl border border-form hover:bg-form transition flex items-center gap-4"
           >
             <span>Change password</span>
             <Icon v-if="loading" icon="eos-icons:bubble-loading" class="text-xl" />

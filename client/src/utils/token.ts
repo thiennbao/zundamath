@@ -4,6 +4,9 @@ import Cookies from "universal-cookie";
 const cookies = new Cookies();
 
 const tokenUtil = {
+  get: () => {
+    return cookies.get("token");
+  },
   sign: (token: string) => {
     cookies.set("token", token);
   },
@@ -15,7 +18,7 @@ const tokenUtil = {
     if (token) {
       try {
         const res = await axios.post(`${import.meta.env.VITE_SERVER_URL}/api/auth/verify`, { token });
-        return res.data.decoded;
+        return res.data.verified;
       } catch (error: any) {
         console.log(error.message);
       }

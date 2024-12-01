@@ -56,23 +56,25 @@ const authController = {
     }
     const { token } = req.body;
     try {
-      const decoded = jwt.verify(token, process.env.JWT_KEY as string);
-      res.status(200).json({ message: "Token verified", decoded });
+      jwt.verify(token, process.env.JWT_KEY as string);
+      res.status(200).json({ message: "Token verified", verified: true });
     } catch (error) {
+      console.log(error);
       if (error instanceof jwt.JsonWebTokenError) {
-        res.status(200).json({ message: "Invalid token", decoded: null });
+        res.status(200).json({ message: "Invalid token", verified: false });
       } else {
         res.status(500).json({ message: "Server internal error" });
       }
     }
   },
   change: async (req: Request, res: Response) => {
-    if (!req.body.id || !req.body.current || !req.body.password) {
+    if (!req.body.token || !req.body.current || !req.body.password) {
       res.status(400).json({ message: "Bad request" });
       return;
     }
-    const { id, current, password } = req.body;
+    const { token, current, password } = req.body;
     try {
+      const id = jwt.verify(token, process.env.JWT_KEY as string) as string;
       const foundAccount = await prisma.account.findUnique({ where: { id } });
       if (!foundAccount) {
         res.status(404).json({ message: "Username not found" });
@@ -87,8 +89,12 @@ const authController = {
       await prisma.account.update({ where: { id }, data: { password: hashed } });
       res.status(200).json({ message: "Changed password successfully" });
     } catch (error) {
-      console.log(error);
-      res.status(500).json({ message: "Server internal error" });
+      if (error instanceof jwt.JsonWebTokenError) {
+        res.status(200).json({ message: "Invalid token", decoded: null });
+      } else {
+        console.log(error);
+        res.status(500).json({ message: "Server internal error" });
+      }
     }
   },
 };

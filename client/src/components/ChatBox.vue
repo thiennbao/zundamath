@@ -8,16 +8,12 @@ import tokenUtil from "../utils/token";
 const router = useRouter();
 const route = useRoute();
 
-const data = reactive({ accountId: "", chatId: "", message: "" });
+const data = reactive({ token: tokenUtil.get(), chatId: route.params.id as string, message: "" });
 const history = ref<string[]>([]);
 onMounted(async () => {
-  data.accountId = await tokenUtil.verify();
-  data.chatId = route.params.id as string;
   if (route.params.id) {
     try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_SERVER_URL}/api/chat/${data.chatId}?accountId=${data.accountId || ""}`
-      );
+      const res = await axios.get(`${import.meta.env.VITE_SERVER_URL}/api/chat/${data.chatId}?token=${data.token}`);
       history.value = res.data.chat.messages.map((msg: { content: string }) => msg.content);
     } catch (error: any) {
       console.log(error.response.data.message);
@@ -44,7 +40,7 @@ const handleSubmit = async () => {
       const res = await axios.post(`${import.meta.env.VITE_SERVER_URL}/api/chat`, data);
       history.value.push(data.message);
       history.value.push(res.data.message);
-      if (data.accountId && !data.chatId) {
+      if (!data.chatId && res.data.chatId) {
         data.chatId = res.data.chatId;
         router.push(`/chat/${res.data.chatId}`);
       }
