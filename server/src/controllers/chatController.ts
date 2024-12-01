@@ -116,8 +116,25 @@ const chatController = {
   deleteChat: (req: Request, res: Response) => {
     res.send("Delete a chat");
   },
-  shareChat: (req: Request, res: Response) => {
-    res.send("Share a chat");
+  shareChat: async (req: Request, res: Response) => {
+    if (!req.params.id || req.body.tobeShared === null) {
+      res.status(400).json({ message: "Bad request" });
+      return;
+    }
+    const { id } = req.params;
+    const { token, tobeShared } = req.body;
+    try {
+      jwt.verify(token as string, process.env.JWT_KEY as string) as string;
+      await prisma.chat.update({ where: { id }, data: { shared: tobeShared } });
+      res.status(200).json({ message: "Change chat share mode successfully", shared: tobeShared });
+    } catch (error) {
+      if (error instanceof jwt.JsonWebTokenError) {
+        res.status(401).json({ message: "Unauthorized" });
+        return;
+      }
+      console.log(error);
+      res.status(500).json({ message: "Server internal error" });
+    }
   },
 };
 

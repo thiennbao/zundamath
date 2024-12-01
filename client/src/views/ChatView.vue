@@ -3,8 +3,9 @@ import { onMounted, ref } from "vue";
 import ChatBox from "../components/ChatBox.vue";
 import ChatHeader from "../components/ChatHeader.vue";
 import ChatSidebar from "../components/ChatSidebar.vue";
-import Settings from "../components/Settings.vue";
 import Popup from "../components/Popup.vue";
+import PopupSettings from "../components/PopupSettings.vue";
+import PopupShare from "../components/PopupShare.vue";
 import tokenUtil from "../utils/token";
 
 const hasLogged = ref(true);
@@ -38,8 +39,10 @@ const toggleSetting = (isOpen: boolean) => (isSettingsOpen.value = isOpen);
       <ChatBox class="flex-grow px-4 w-full lg:w-3/5 max-w-screen-md m-auto" />
     </div>
     <Popup title="Settings" :toggle="toggleSetting" v-if="isSettingsOpen">
-      <Settings></Settings>
+      <PopupSettings></PopupSettings>
     </Popup>
-    <Popup title="Share" :toggle="toggleShare" v-if="isShareOpen"></Popup>
+    <Popup title="Share this chat" :toggle="toggleShare" v-if="isShareOpen">
+      <PopupShare></PopupShare>
+    </Popup>
   </main>
 </template>

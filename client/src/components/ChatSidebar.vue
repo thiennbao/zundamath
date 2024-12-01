@@ -84,12 +84,6 @@ watch(() => route.params.id, getHistory);
                 class="hidden peer-hover:block hover:block absolute right-0 p-2 bg-dark text-gray-300 rounded-lg shadow-primary shadow-[0_0_2px]"
               >
                 <div
-                  class="flex justify-between items-center gap-6 p-2 rounded-md hover:bg-primary hover:bg-opacity-5 hover:text-primary"
-                >
-                  <span>Share</span>
-                  <Icon icon="material-symbols:share-outline" class="text-lg" />
-                </div>
-                <div
                   class="flex justify-between items-center gap-6 p-2 rounded-md hover:bg-red-500 hover:bg-opacity-5 hover:text-red-500"
                 >
                   <span>Delete</span>
