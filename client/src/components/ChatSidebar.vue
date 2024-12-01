@@ -40,10 +40,15 @@ watch(() => route.params.id, getHistory);
 </script>
 
 <template>
-  <div :class="{ 'w-72': isOpen, 'w-0': !isOpen }" class="transition-all duration-700">
+  <div :class="{ 'w-72': isOpen, 'w-0': !isOpen }" class="fixed lg:static transition-all duration-700">
+    <div
+      v-if="isOpen"
+      @click="toggle(false)"
+      class="block lg:hidden fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-90"
+    ></div>
     <div
       :class="{ 'w-72 px-4': isOpen, 'w-0 px-0': !isOpen }"
-      class="fixed h-screen py-4 bg-[#101010] transition-all duration-700 overflow-y-scroll [&::-webkit-scrollbar]:w-[2px] [&::-webkit-scrollbar-thumb]:bg-primary"
+      class="z-10 max-w-[80vw] fixed h-screen py-4 bg-[#101010] transition-all duration-700 overflow-y-scroll [&::-webkit-scrollbar]:w-[2px] [&::-webkit-scrollbar-thumb]:bg-primary"
     >
       <div class="flex justify-between mb-8">
         <div
@@ -53,7 +58,7 @@ watch(() => route.params.id, getHistory);
           <Icon icon="hugeicons:sidebar-left" class="text-xl" />
         </div>
         <RouterLink
-          to="/chat"
+          to="/chat/new"
           class="p-2 rounded-lg cursor-pointer transition hover:bg-primary hover:bg-opacity-5 hover:text-primary"
         >
           <Icon icon="solar:pen-new-square-broken" class="text-xl" />

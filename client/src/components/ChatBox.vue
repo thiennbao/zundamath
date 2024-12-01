@@ -13,6 +13,10 @@ const history = ref<string[]>([]);
 const loading = ref(false);
 
 const getHistory = async () => {
+  if (route.params.id === "new") {
+    router.push("/chat");
+    return;
+  }
   data.chatId = route.params.id as string;
   history.value = [];
   if (route.params.id) {

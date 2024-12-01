@@ -1,44 +1,45 @@
 <script setup lang="ts">
 import { Icon } from "@iconify/vue";
-import Popup from "./Popup.vue";
-import Settings from "./Settings.vue";
-import { ref } from "vue";
 
-const isSettingsOpen = ref(false);
-
-const toggleSetting = (isOpen: boolean) => {
-  isSettingsOpen.value = isOpen;
-};
+defineProps(["isSidebarOpen", "toggleSidebar", "toggleSetting", "toggleShare", "disableSidebar"]);
 </script>
 
 <template>
   <div class="flex justify-between items-center px-6 py-4">
-    <div class="flex gap-4">
-      <div class="hidden">
-        <div class="p-2 rounded-lg cursor-pointer transition hover:bg-primary hover:bg-opacity-5 hover:text-primary">
-          <Icon icon="hugeicons:sidebar-left" class="text-xl" />
-        </div>
-        <div class="p-2 rounded-lg cursor-pointer transition hover:bg-primary hover:bg-opacity-5 hover:text-primary">
-          <Icon icon="solar:pen-new-square-broken" class="text-xl" />
+    <div class="flex gap-4 items-center">
+      <div class="w-20">
+        <div class="flex gap-2">
+          <div
+            v-if="!isSidebarOpen"
+            @click="toggleSidebar(true)"
+            class="p-2 rounded-lg cursor-pointer transition hover:bg-primary hover:bg-opacity-5 hover:text-primary"
+          >
+            <Icon icon="hugeicons:sidebar-left" class="text-xl" />
+          </div>
+          <RouterLink
+            v-if="!isSidebarOpen || disableSidebar"
+            to="/chat/new"
+            class="p-2 rounded-lg cursor-pointer transition hover:bg-primary hover:bg-opacity-5 hover:text-primary"
+          >
+            <Icon icon="solar:pen-new-square-broken" class="text-xl" />
+          </RouterLink>
         </div>
       </div>
-      <RouterLink to="/">
-        <img src="/logo.svg" class="h-8" />
-      </RouterLink>
     </div>
+    <RouterLink to="/" class="flex items-center gap-2">
+      <img src="/logo.svg" class="h-10" />
+      <p class="hidden md:block text-2xl bg-gradient-primary text-transparent bg-clip-text">ZundaMath</p>
+    </RouterLink>
     <div class="flex gap-2">
-      <button class="p-2 rounded-md hover:bg-primary hover:bg-opacity-5 hover:text-primary">
-        <Icon icon="material-symbols:share-outline" class="text-2xl" />
+      <button @click="toggleShare(true)" class="p-2 rounded-md hover:bg-primary hover:bg-opacity-5 hover:text-primary">
+        <Icon icon="material-symbols:share-outline" class="text-xl" />
       </button>
       <button
-        @click="isSettingsOpen = !isSettingsOpen"
+        @click="toggleSetting(true)"
         class="p-2 rounded-md hover:bg-primary hover:bg-opacity-5 hover:text-primary"
       >
-        <Icon icon="hugeicons:setting-07" class="text-2xl" />
+        <Icon icon="hugeicons:setting-07" class="text-xl" />
       </button>
     </div>
-    <Popup title="Settings" :toggle="toggleSetting" v-if="isSettingsOpen">
-      <Settings></Settings>
-    </Popup>
   </div>
 </template>

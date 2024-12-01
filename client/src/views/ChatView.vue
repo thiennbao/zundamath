@@ -1,24 +1,45 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import ChatBox from "../components/ChatBox.vue";
 import ChatHeader from "../components/ChatHeader.vue";
 import ChatSidebar from "../components/ChatSidebar.vue";
+import Settings from "../components/Settings.vue";
+import Popup from "../components/Popup.vue";
+import tokenUtil from "../utils/token";
+
+const hasLogged = ref(true);
+onMounted(async () => {
+  hasLogged.value = await tokenUtil.verify();
+});
 
 const isSidebarOpen = ref(true);
+const isShareOpen = ref(false);
+const isSettingsOpen = ref(false);
 
-const toggleSidebar = (isOpen: boolean) => {
-  isSidebarOpen.value = isOpen;
-};
+const toggleSidebar = (isOpen: boolean) => (isSidebarOpen.value = isOpen);
+const toggleShare = (isOpen: boolean) => (isShareOpen.value = isOpen);
+const toggleSetting = (isOpen: boolean) => (isSettingsOpen.value = isOpen);
 </script>
 
 <template>
   <main class="flex">
-    <ChatSidebar class="flex-shrink-0" :isOpen="isSidebarOpen" :toggle="toggleSidebar" />
+    <ChatSidebar v-if="hasLogged" class="flex-shrink-0 z-20" :isOpen="isSidebarOpen" :toggle="toggleSidebar" />
     <div
       class="flex-grow flex flex-col h-screen overflow-y-scroll [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:bg-primary"
     >
-      <ChatHeader class="sticky top-0 bg-dark z-10" />
-      <ChatBox class="flex-grow w-3/5 m-auto" />
+      <ChatHeader
+        :isSidebarOpen="isSidebarOpen"
+        :toggleSidebar="toggleSidebar"
+        :toggleShare="toggleShare"
+        :toggleSetting="toggleSetting"
+        :disableSidebar="!hasLogged"
+        class="sticky top-0 bg-dark z-10"
+      />
+      <ChatBox class="flex-grow px-4 w-full lg:w-3/5 max-w-screen-md m-auto" />
     </div>
+    <Popup title="Settings" :toggle="toggleSetting" v-if="isSettingsOpen">
+      <Settings></Settings>
+    </Popup>
+    <Popup title="Share" :toggle="toggleShare" v-if="isShareOpen"></Popup>
   </main>
 </template>
