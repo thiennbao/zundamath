@@ -1,12 +1,19 @@
 <script setup lang="ts">
+import { ref } from "vue";
 import ChatBox from "../components/ChatBox.vue";
 import ChatHeader from "../components/ChatHeader.vue";
 import ChatSidebar from "../components/ChatSidebar.vue";
+
+const isSidebarOpen = ref(true);
+
+const toggleSidebar = (isOpen: boolean) => {
+  isSidebarOpen.value = isOpen;
+};
 </script>
 
 <template>
   <main class="flex">
-    <ChatSidebar class="flex-shrink-0" />
+    <ChatSidebar class="flex-shrink-0" :isOpen="isSidebarOpen" :toggle="toggleSidebar" />
     <div
       class="flex-grow flex flex-col h-screen overflow-y-scroll [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:bg-primary"
     >

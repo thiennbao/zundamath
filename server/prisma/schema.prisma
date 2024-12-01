@@ -17,6 +17,7 @@ model Account {
 model Chat {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
   datetime  DateTime  @default(now())
+  title     String
   messages  Message[]
   shared    Boolean   @default(false)
   Account   Account   @relation(fields: [accountId], references: [id])

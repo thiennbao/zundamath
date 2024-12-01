@@ -1,25 +1,35 @@
 <script setup lang="ts">
 import { Icon } from "@iconify/vue";
 import axios from "axios";
-import { onMounted, reactive, ref } from "vue";
+import { onMounted, reactive, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import tokenUtil from "../utils/token";
 
 const router = useRouter();
 const route = useRoute();
 
-const data = reactive({ token: tokenUtil.get(), chatId: route.params.id as string, message: "" });
+const data = reactive({ token: tokenUtil.get(), chatId: "", message: "" });
 const history = ref<string[]>([]);
-onMounted(async () => {
+const loading = ref(false);
+
+const getHistory = async () => {
+  data.chatId = route.params.id as string;
+  history.value = [];
   if (route.params.id) {
     try {
-      const res = await axios.get(`${import.meta.env.VITE_SERVER_URL}/api/chat/${data.chatId}?token=${data.token}`);
+      loading.value = true;
+      const res = await axios.get(`${import.meta.env.VITE_SERVER_URL}/api/chat/${route.params.id}?token=${data.token}`);
       history.value = res.data.chat.messages.map((msg: { content: string }) => msg.content);
     } catch (error: any) {
       console.log(error.response.data.message);
+    } finally {
+      loading.value = false;
     }
   }
-});
+};
+onMounted(getHistory);
+watch(() => route.params.id, getHistory);
+
 const textarea = ref<HTMLElement | null>(null);
 const errorMsg = ref("");
 
@@ -58,7 +68,10 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-  <div :class="history.length ? 'justify-between' : 'justify-center'" class="flex flex-col gap-12 relative">
+  <div v-if="loading" class="flex justify-center items-center">
+    <Icon icon="eos-icons:bubble-loading" class="text-2xl" />
+  </div>
+  <div v-else :class="history.length ? 'justify-between' : 'justify-center'" class="flex flex-col gap-12 relative">
     <div class="flex flex-col gap-8">
       <div v-if="!history.length" class="text-4xl text-center bg-gradient-primary text-transparent bg-clip-text">
         Ask me a maths question

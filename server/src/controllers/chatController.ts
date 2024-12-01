@@ -33,7 +33,7 @@ const chatController = {
           }
         } else {
           // Create new chat if no chatId
-          const newChat = await prisma.chat.create({ data: { accountId } });
+          const newChat = await prisma.chat.create({ data: { accountId, title: message } });
           await prisma.message.createMany({
             data: [
               { content: message, type: MessageType.REQUEST, chatId: newChat.id },
@@ -56,8 +56,20 @@ const chatController = {
     }
   },
 
-  getChats: (req: Request, res: Response) => {
-    res.send("Get chat list");
+  getChats: async (req: Request, res: Response) => {
+    const { token } = req.query;
+    try {
+      const accountId = jwt.verify(token as string, process.env.JWT_KEY as string) as string;
+      const chats = await prisma.chat.findMany({ where: { accountId }, orderBy: { datetime: "desc" } });
+      res.status(200).json({ chats });
+    } catch (error) {
+      if (error instanceof jwt.JsonWebTokenError) {
+        res.status(200).json({ chats: [] });
+        return;
+      }
+      console.log(error);
+      res.status(500).json({ message: "Server internal error" });
+    }
   },
   loadChat: async (req: Request, res: Response) => {
     if (!req.params.id) {
