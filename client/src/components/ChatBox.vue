@@ -5,6 +5,8 @@ import { onMounted, reactive, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import tokenUtil from "../utils/token";
 
+const props = defineProps(["scrollToBottom"]);
+
 const router = useRouter();
 const route = useRoute();
 
@@ -40,6 +42,7 @@ watch(() => route.params.id, getHistory);
 
 const textarea = ref<HTMLElement | null>(null);
 const errorMsg = ref("");
+const msgLoading = ref(false);
 
 const adjustHeight = () => {
   if (textarea.value) {
@@ -53,18 +56,31 @@ const handleKeydown = (event: KeyboardEvent) => {
   }
 };
 const handleSubmit = async () => {
+  if (msgLoading.value) return;
   if (data.message) {
     try {
+      msgLoading.value = true;
       const res = await axios.post(`${import.meta.env.VITE_SERVER_URL}/api/chat`, data);
       history.value.push(data.message);
-      history.value.push(res.data.message);
-      if (!data.chatId && res.data.chatId) {
-        data.chatId = res.data.chatId;
-        router.push(`/chat/${res.data.chatId}`);
-      }
+      history.value.push("");
+      let index = 0;
+      const interval = setInterval(() => {
+        props.scrollToBottom();
+        history.value[history.value.length - 1] += res.data.message.charAt(index);
+        index++;
+        if (index === res.data.message.length) {
+          clearInterval(interval);
+          if (!data.chatId && res.data.chatId) {
+            data.chatId = res.data.chatId;
+            router.push(`/chat/${res.data.chatId}`);
+          }
+        }
+      }, 20);
     } catch (error: any) {
       console.error(error.message);
       errorMsg.value = error.message;
+    } finally {
+      msgLoading.value = false;
     }
   }
   if (textarea.value) {
@@ -87,8 +103,9 @@ const handleSubmit = async () => {
       <div
         v-for="(msg, index) in history"
         :class="index % 2 == 0 && 'ml-auto'"
-        class="w-4/5 max-w-fit bg-form px-4 py-2 rounded-xl whitespace-pre-wrap"
+        class="w-4/5 max-w-fit bg-form px-4 py-2 rounded-xl whitespace-pre-wrap relative"
       >
+        <img v-if="index % 2" src="/logo.svg" class="w-8 aspect-square absolute bottom-full left-2" />
         {{ msg }}
       </div>
     </div>

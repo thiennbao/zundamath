@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Icon } from "@iconify/vue";
 
-defineProps(["isSidebarOpen", "toggleSidebar", "toggleSetting", "toggleShare", "disableSidebar"]);
+defineProps(["isSidebarOpen", "toggleSidebar", "toggleSetting", "toggleShare", "disableSidebar", "disableShare"]);
 </script>
 
 <template>
@@ -31,7 +31,11 @@ defineProps(["isSidebarOpen", "toggleSidebar", "toggleSetting", "toggleShare", "
       <p class="hidden md:block text-2xl bg-gradient-primary text-transparent bg-clip-text">ZundaMath</p>
     </RouterLink>
     <div class="flex gap-2">
-      <button @click="toggleShare(true)" class="p-2 rounded-md hover:bg-primary hover:bg-opacity-5 hover:text-primary">
+      <button
+        v-if="!disableShare"
+        @click="toggleShare(true)"
+        class="p-2 rounded-md hover:bg-primary hover:bg-opacity-5 hover:text-primary"
+      >
         <Icon icon="material-symbols:share-outline" class="text-xl" />
       </button>
       <button
