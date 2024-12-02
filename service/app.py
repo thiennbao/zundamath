@@ -9,9 +9,10 @@ def chat():
   print()
   data = request.get_json()
   reqMsg = data.get("message", None)
-  if not reqMsg: return jsonify({ "message": "Bad request"}), 400
+  reqHistory = data.get("history", None)
+  if not reqMsg or reqHistory == None: return jsonify({ "message": "Bad request"}), 400
   try:
-    resMsg = chatbot.chat(reqMsg)
+    resMsg = chatbot.chat(reqMsg, reqHistory)
     return jsonify({ "message": resMsg }), 200
   except:
     return jsonify({ "message": "Server internal error"}), 500

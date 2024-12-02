@@ -11,9 +11,9 @@ const chatController = {
       res.status(400).json({ message: "Bad request" });
       return;
     }
-    const { token, chatId, message } = req.body;
+    const { token, chatId, message, history } = req.body;
     try {
-      const resMsg = await axios.post(process.env.CHAT_URL as string, { message });
+      const resMsg = await axios.post(process.env.CHAT_URL as string, { message, history });
       try {
         const accountId = jwt.verify(token, process.env.JWT_KEY as string) as string;
         if (chatId) {

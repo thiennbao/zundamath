@@ -7,7 +7,8 @@ class ChatBot():
       cls.model = None # Init model here
     return cls._instance
     
-  def chat(self, message):
+  def chat(self, message, history):
+    print(message, history)
     # Just placeholder, change later
     messages = [
       "Anh hẹn em Pickleball 🏓🌟",

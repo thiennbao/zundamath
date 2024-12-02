@@ -16,7 +16,7 @@ onMounted(async () => {
   hasLogged.value = await tokenUtil.verify();
 });
 
-const isSidebarOpen = ref(true);
+const isSidebarOpen = ref(false);
 const isShareOpen = ref(false);
 const isSettingsOpen = ref(false);
 

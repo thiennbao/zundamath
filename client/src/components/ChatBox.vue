@@ -60,7 +60,7 @@ const handleSubmit = async () => {
   if (data.message) {
     try {
       msgLoading.value = true;
-      const res = await axios.post(`${import.meta.env.VITE_SERVER_URL}/api/chat`, data);
+      const res = await axios.post(`${import.meta.env.VITE_SERVER_URL}/api/chat`, { ...data, history: history.value });
       history.value.push(data.message);
       history.value.push("");
       let index = 0;
