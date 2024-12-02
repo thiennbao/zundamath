@@ -25,7 +25,7 @@ onMounted(async () => {
           </RouterLink>
           <RouterLink
             to="/chat"
-            class="px-4 py-2 cursor-pointer rounded border-2 border-primary hover:bg-primary hover:text-dark transition flex items-center gap-1"
+            class="px-4 py-2 cursor-pointer rounded border-2 border-primary hover:bg-primary hover:text-dark transition flex items-center gap-2"
           >
             <span>Start chatting</span>
             <Icon icon="fluent:arrow-right-12-filled" />

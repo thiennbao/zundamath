@@ -25,7 +25,11 @@ const getHistory = async () => {
       const res = await axios.get(`${import.meta.env.VITE_SERVER_URL}/api/chat/${route.params.id}?token=${data.token}`);
       history.value = res.data.chat.messages.map((msg: { content: string }) => msg.content);
     } catch (error: any) {
-      console.log(error.response.data.message);
+      if (error.status === 404) {
+        router.push("/chat/new");
+      } else {
+        console.log(error.response.data.message);
+      }
     } finally {
       loading.value = false;
     }

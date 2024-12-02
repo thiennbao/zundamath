@@ -4,6 +4,7 @@ import ChatView from "../views/ChatView.vue";
 import LoginView from "../views/LoginView.vue";
 import SignupView from "../views/SignupView.vue";
 import tokenUtil from "../utils/token";
+import NotFoundView from "../views/NotFoundView.vue";
 
 const routes = [
   { path: "/", component: HomeView },
@@ -11,6 +12,7 @@ const routes = [
   { path: "/chat/:id", component: ChatView },
   { path: "/login", component: LoginView },
   { path: "/signup", component: SignupView },
+  { path: "/:catchAll(.*)", component: NotFoundView },
 ];
 
 const router = createRouter({

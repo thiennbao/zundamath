@@ -3,6 +3,7 @@ import axios from "axios";
 import jwt from "jsonwebtoken";
 import prisma from "../utils/prisma";
 import { MessageType } from "@prisma/client";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 const chatController = {
   chat: async (req: Request, res: Response) => {
@@ -123,8 +124,12 @@ const chatController = {
         }
       }
     } catch (error) {
-      console.log(error);
-      res.status(500).json({ message: "Server internal error" });
+      if (error instanceof PrismaClientKnownRequestError) {
+        res.status(404).json({ message: "Chat not found" });
+      } else {
+        console.log(error);
+        res.status(500).json({ message: "Server internal error" });
+      }
     }
   },
   deleteChat: async (req: Request, res: Response) => {
