@@ -4,10 +4,11 @@ import { onMounted, reactive, ref, watch } from "vue";
 import tokenUtil from "../utils/token";
 import axios from "axios";
 import datetimeUtil, { timeCategory } from "../utils/datetime";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 defineProps(["isOpen", "toggle"]);
 
+const router = useRouter();
 const route = useRoute();
 const id = ref("");
 
@@ -37,6 +38,20 @@ const getHistory = async () => {
 };
 onMounted(getHistory);
 watch(() => route.params.id, getHistory);
+
+const handleDelete = async (id: string) => {
+  try {
+    const token = tokenUtil.get();
+    await axios.delete(`${import.meta.env.VITE_SERVER_URL}/api/chat/${id}?token=${token}`);
+    if (id === route.params.id) {
+      router.push("/chat/new");
+    } else {
+      getHistory();
+    }
+  } catch (error: any) {
+    console.log(error.response.data.message);
+  }
+};
 </script>
 
 <template>
@@ -84,6 +99,7 @@ watch(() => route.params.id, getHistory);
                 class="hidden peer-hover:block hover:block absolute right-0 p-2 bg-dark text-gray-300 rounded-lg shadow-primary shadow-[0_0_2px]"
               >
                 <div
+                  @click="handleDelete(item.id)"
                   class="flex justify-between items-center gap-6 p-2 rounded-md hover:bg-red-500 hover:bg-opacity-5 hover:text-red-500"
                 >
                   <span>Delete</span>

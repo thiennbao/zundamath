@@ -55,7 +55,6 @@ const chatController = {
       res.status(500).json({ message: "Server internal error" });
     }
   },
-
   getChats: async (req: Request, res: Response) => {
     const { token } = req.query;
     try {
@@ -65,6 +64,21 @@ const chatController = {
     } catch (error) {
       if (error instanceof jwt.JsonWebTokenError) {
         res.status(200).json({ chats: [] });
+        return;
+      }
+      console.log(error);
+      res.status(500).json({ message: "Server internal error" });
+    }
+  },
+  deleteChats: async (req: Request, res: Response) => {
+    const { token } = req.query;
+    try {
+      const accountId = jwt.verify(token as string, process.env.JWT_KEY as string) as string;
+      await prisma.chat.deleteMany({ where: { accountId } });
+      res.status(200).json({ message: "Delete all chats successfully" });
+    } catch (error: any) {
+      if (error instanceof jwt.JsonWebTokenError) {
+        res.status(401).json({ message: "Unauthorized" });
         return;
       }
       console.log(error);
@@ -113,8 +127,34 @@ const chatController = {
       res.status(500).json({ message: "Server internal error" });
     }
   },
-  deleteChat: (req: Request, res: Response) => {
-    res.send("Delete a chat");
+  deleteChat: async (req: Request, res: Response) => {
+    if (!req.params.id) {
+      res.status(400).json({ message: "Bad request" });
+      return;
+    }
+    const { id } = req.params;
+    const { token } = req.query;
+    try {
+      const accountId = jwt.verify(token as string, process.env.JWT_KEY as string) as string;
+      const foundChat = await prisma.chat.findUnique({ where: { id } });
+      if (!foundChat) {
+        res.status(404).json({ message: "Chat not found" });
+        return;
+      }
+      if (accountId !== foundChat.accountId) {
+        res.status(401).json({ message: "Unauthorized" });
+        return;
+      }
+      await prisma.chat.delete({ where: { id } });
+      res.status(200).json({ message: "Delete chat successfully" });
+    } catch (error) {
+      if (error instanceof jwt.JsonWebTokenError) {
+        res.status(401).json({ message: "Unauthorized" });
+        return;
+      }
+      console.log(error);
+      res.status(500).json({ message: "Server internal error" });
+    }
   },
   shareChat: async (req: Request, res: Response) => {
     if (!req.params.id || req.body.tobeShared === null) {
@@ -125,6 +165,8 @@ const chatController = {
     const { token, tobeShared } = req.body;
     try {
       jwt.verify(token as string, process.env.JWT_KEY as string) as string;
+      // const foundChat = await prisma.chat.findUnique({ where: { id } });
+
       await prisma.chat.update({ where: { id }, data: { shared: tobeShared } });
       res.status(200).json({ message: "Change chat share mode successfully", shared: tobeShared });
     } catch (error) {

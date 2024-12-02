@@ -9,6 +9,23 @@ const tab = ref("general");
 
 const router = useRouter();
 
+const deleteSuccess = ref(false);
+const deleteLoading = ref(false);
+const handleDeleteAll = async () => {
+  const token = tokenUtil.get();
+  try {
+    deleteLoading.value = true;
+    deleteSuccess.value = false;
+    await axios.delete(`${import.meta.env.VITE_SERVER_URL}/api/chat?token=${token}`);
+    router.push("/chat/new");
+    deleteSuccess.value = true;
+  } catch (error: any) {
+    console.log(error.response.data.message);
+  } finally {
+    deleteLoading.value = false;
+  }
+};
+
 const logout = () => {
   tokenUtil.remove();
   router.push("/");
@@ -20,11 +37,10 @@ const errMsg = reactive({
   password: "",
   confirm: "",
 });
-const isSuccess = ref(false);
-const loading = ref(false);
-
-const changePassword = async () => {
-  if (loading.value) return;
+const changeSuccess = ref(false);
+const changeLoading = ref(false);
+const handleChangePassword = async () => {
+  if (changeLoading.value) return;
   for (let key in data) {
     if (!data[key as keyof typeof data]) {
       errMsg[key as keyof typeof errMsg] = "Please fill out this field";
@@ -36,15 +52,15 @@ const changePassword = async () => {
     return;
   }
   try {
-    isSuccess.value = false;
-    loading.value = true;
+    changeSuccess.value = false;
+    changeLoading.value = true;
     await axios.patch(`${import.meta.env.VITE_SERVER_URL}/api/auth/change`, data);
-    isSuccess.value = true;
+    changeSuccess.value = true;
   } catch (error: any) {
     console.error(error.response.data.message);
     errMsg.current = error.response.data.message;
   } finally {
-    loading.value = false;
+    changeLoading.value = false;
   }
 };
 </script>
@@ -74,9 +90,19 @@ const changePassword = async () => {
         <div class="flex justify-between items-center">
           <p>Delete all chats</p>
           <button
-            class="px-4 py-2 rounded-xl text-red-500 border border-red-500 hover:bg-red-500 hover:bg-opacity-5 transition"
+            v-if="deleteSuccess"
+            class="w-fit ml-auto px-4 py-2 rounded-xl border text-red-500 border-red-500 hover:bg-red-500 hover:bg-opacity-5 transition flex items-center gap-2"
           >
-            Delete
+            <span>Delete all successfully</span>
+            <Icon icon="mynaui:check" class="text-xl" />
+          </button>
+          <button
+            v-else
+            @click="handleDeleteAll"
+            class="px-4 py-2 rounded-xl text-red-500 border border-red-500 hover:bg-red-500 hover:bg-opacity-5 transition flex items-center gap-4"
+          >
+            <span>Delete all</span>
+            <Icon v-if="deleteLoading" icon="eos-icons:bubble-loading" class="text-xl" />
           </button>
         </div>
       </div>
@@ -123,7 +149,7 @@ const changePassword = async () => {
             <p class="text-sm text-red-400 px-2">{{ errMsg.confirm }}</p>
           </div>
           <button
-            v-if="isSuccess"
+            v-if="changeSuccess"
             class="w-fit ml-auto px-4 py-2 rounded-xl border text-primary border-primary hover:bg-primary hover:bg-opacity-5 transition flex items-center gap-2"
           >
             <span>Change password successfully</span>
@@ -131,11 +157,11 @@ const changePassword = async () => {
           </button>
           <button
             v-else
-            @click="changePassword"
+            @click="handleChangePassword"
             class="w-fit ml-auto px-4 py-2 rounded-xl border border-form hover:bg-form transition flex items-center gap-4"
           >
             <span>Change password</span>
-            <Icon v-if="loading" icon="eos-icons:bubble-loading" class="text-xl" />
+            <Icon v-if="changeLoading" icon="eos-icons:bubble-loading" class="text-xl" />
           </button>
         </div>
       </div>

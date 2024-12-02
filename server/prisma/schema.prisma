@@ -20,7 +20,7 @@ model Chat {
   title     String
   messages  Message[]
   shared    Boolean   @default(false)
-  Account   Account   @relation(fields: [accountId], references: [id])
+  Account   Account   @relation(fields: [accountId], references: [id], onDelete: Cascade)
   accountId String    @db.ObjectId
 }
 
@@ -34,6 +34,6 @@ model Message {
   content  String
   type     MessageType
   datetime DateTime    @default(now())
-  Chat     Chat        @relation(fields: [chatId], references: [id])
+  Chat     Chat        @relation(fields: [chatId], references: [id], onDelete: Cascade)
   chatId   String      @db.ObjectId
 }
