@@ -13,7 +13,7 @@ const chatController = {
     }
     const { token, chatId, message, history } = req.body;
     try {
-      const resMsg = await axios.post(process.env.CHAT_URL as string, { message, history });
+      const resMsg = await axios.post(`${process.env.CHAT_URL}/chat`, { message, history });
       try {
         const accountId = jwt.verify(token, process.env.JWT_KEY as string) as string;
         if (chatId) {

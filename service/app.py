@@ -1,12 +1,17 @@
 from flask import Flask, request, jsonify
 from chatbot import ChatBot
 
+
 app = Flask(__name__)
 chatbot = ChatBot()
 
-@app.route("/", methods=["POST"])
+
+@app.route("/")
+def home():
+    return jsonify({ "message": "Service is alive" }), 200
+
+@app.route("/chat", methods=["POST"])
 def chat():
-  print()
   data = request.get_json()
   reqMsg = data.get("message", None)
   reqHistory = data.get("history", None)
